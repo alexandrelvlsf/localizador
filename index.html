@@ -222,7 +222,7 @@
       + '<div class="linha"><span>Fazenda</span><b>' + esc(a.fazenda) + '</b></div>'
       + '<div class="linha"><span>Módulo</span><b>' + esc(a.modulo) + '</b></div>'
       + '<div class="linha"><span>Área</span><b>' + esc(a.area) + '</b></div>'
-      + '<div class="linha"><span>Lote</span><b>' + esc(a.lote || '-') + '</b></div>'
+      + '<div class="linha"><span>Lote</span><b>' + esc(a.lote || '') + '</b></div>'
       + '<div class="linha"><span>Data última pesagem</span><b>' + esc(a.dataPesagem) + '</b></div>'
       + '<div class="linha"><span>Peso atual</span><b>' + esc(a.peso) + '</b></div>'
       + '<div class="linha"><span>Peso projetado</span><b>' + esc(a.pesoProjetado) + '</b></div></div>';
@@ -231,7 +231,7 @@
     return {
       fazenda: base.fazendas[l[0]] || '-', visual: ou(l[1]), eletronica: ou(l[2]), sexo: ou(l[3]), raca: ou(l[4]),
       idade: fmtIdade(l[5]), categoria: ou(l[6]), situacao: ou(l[7]), modulo: ou(l[8]), area: l[9] || 'Sem área',
-      dataPesagem: ou(l[10]), peso: fmtPeso(l[11]), pesoProjetado: fmtPeso(l[12]), lote: ou(l[13]),
+      dataPesagem: ou(l[10]), peso: fmtPeso(l[11]), pesoProjetado: fmtPeso(l[12]), lote: /^\s*sem lote\s*$/i.test(l[13] || '') ? '' : (l[13] || ''),
     };
   }
   function exibir(html) {
