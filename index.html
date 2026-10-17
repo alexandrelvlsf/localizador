@@ -176,7 +176,7 @@
     const st = $('status');
     if (msg) { st.innerHTML = msg; st.className = 'status' + (erro ? ' erro' : ''); return; }
     if (!base) { st.innerHTML = 'Nenhum dado salvo no celular. Toque em <b>Atualizar dados</b> com internet.'; st.className = 'status erro'; return; }
-    st.innerHTML = 'Dados salvos de <b>' + fmtData(base.gerado) + '</b> · ' + base.linhas.length.toLocaleString('pt-BR') + ' animais'
+    st.innerHTML = 'Dados salvos de <b>' + fmtData(base.gerado) + '</b>'
       + (base.falhas && base.falhas.length ? '<br><small>Sem dados de: ' + esc(base.falhas.join(', ')) + '</small>' : '');
     st.className = 'status';
   }
@@ -222,7 +222,7 @@
       + '<div class="linha"><span>Fazenda</span><b>' + esc(a.fazenda) + '</b></div>'
       + '<div class="linha"><span>Módulo</span><b>' + esc(a.modulo) + '</b></div>'
       + '<div class="linha"><span>Área</span><b>' + esc(a.area) + '</b></div>'
-      + '<div class="linha"><span>Lote</span><b>' + esc(a.lote || '') + '</b></div>'
+      + '<div class="linha"><span>Lote</span><b>' + esc(a.lote || '-') + '</b></div>'
       + '<div class="linha"><span>Data última pesagem</span><b>' + esc(a.dataPesagem) + '</b></div>'
       + '<div class="linha"><span>Peso atual</span><b>' + esc(a.peso) + '</b></div>'
       + '<div class="linha"><span>Peso projetado</span><b>' + esc(a.pesoProjetado) + '</b></div></div>';
@@ -230,7 +230,7 @@
   function deLinha(l) {
     return {
       fazenda: base.fazendas[l[0]] || '-', visual: ou(l[1]), eletronica: ou(l[2]), sexo: ou(l[3]), raca: ou(l[4]),
-      idade: fmtIdade(l[5]), categoria: ou(l[6]), situacao: ou(l[7]), modulo: ou(l[8]), area: l[9] || 'Sem área',
+      idade: fmtIdade(l[5]), categoria: ou(l[6]), situacao: ou(l[7]), modulo: ou(l[8]), area: ou(l[9]),
       dataPesagem: ou(l[10]), peso: fmtPeso(l[11]), pesoProjetado: fmtPeso(l[12]), lote: /^\s*sem lote\s*$/i.test(l[13] || '') ? '' : (l[13] || ''),
     };
   }
@@ -281,7 +281,7 @@
   window.addEventListener('online', () => atualizar(false, true));
 
   // ---- atualização automática do app (troque APP_VERSAO e versao.json a cada mudança) ----
-  const APP_VERSAO = '5';
+  const APP_VERSAO = '6';
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
       const checar = () => reg.update().catch(() => {});
