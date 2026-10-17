@@ -201,7 +201,8 @@
       }
       mostrarStatus();
     } catch (e) {
-      if (!silencioso || !base) mostrarStatus('Não consegui atualizar: ' + esc(e.message || e), true);
+      // com dados salvos, não mostra o erro: mantém a data da última atualização
+      if (!base) mostrarStatus('Não consegui atualizar: ' + esc(e.message || e), true);
       else mostrarStatus();
     } finally {
       atualizando = false; bt.disabled = false; bt.textContent = 'Atualizar dados';
