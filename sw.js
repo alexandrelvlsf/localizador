@@ -1,6 +1,6 @@
 // Guarda a página no celular para abrir mesmo sem internet.
 // Ao mudar a página, troque o número da versão abaixo.
-const VERSAO = 'localizador-v4';
+const VERSAO = 'localizador-v5';
 const ARQUIVOS = ['./', 'index.html', 'manifest.json', 'icone-192.png', 'icone-512.png'];
 
 self.addEventListener('install', e => {
@@ -15,7 +15,7 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET' || url.origin !== location.origin) return; // dados do Google não passam aqui
   // tenta a internet primeiro (pega versão nova da tela); sem sinal, usa a cópia guardada
   e.respondWith(
-    fetch(e.request).then(r => {
+    fetch(e.request, { cache: 'no-cache' }).then(r => {
       const copia = r.clone();
       caches.open(VERSAO).then(c => c.put(e.request, copia));
       return r;
