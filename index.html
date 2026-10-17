@@ -280,7 +280,31 @@
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') atualizar(false, true); });
   window.addEventListener('online', () => atualizar(false, true));
 
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  // ---- atualização automática do app (troque APP_VERSAO e versao.json a cada mudança) ----
+  const APP_VERSAO = '5';
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+      const checar = () => reg.update().catch(() => {});
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checar(); });
+      setInterval(checar, 30 * 60000);
+    }).catch(() => {});
+    let recarregou = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!recarregou) { recarregou = true; location.reload(); } });
+  }
+  async function checarVersao() {
+    if (navigator.onLine === false) return;
+    try {
+      const r = await fetch('versao.json?t=' + Date.now(), { cache: 'no-store' });
+      const v = String((await r.json()).versao || '');
+      let ja = ''; try { ja = sessionStorage.getItem('recarregadoPara') || ''; } catch (e) {}
+      if (v && v !== APP_VERSAO && ja !== v) {
+        try { sessionStorage.setItem('recarregadoPara', v); } catch (e) {}
+        location.reload();
+      }
+    } catch (e) {}
+  }
+  checarVersao();
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checarVersao(); });
 </script>
 </body>
 </html>
